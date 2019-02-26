@@ -1,0 +1,18 @@
+body{
+    margin-top: 4em;
+}
+#messageArea{
+    display: none;
+}
+#chat{
+    height: 11em;
+    overflow-y: hidden;
+}
+.well{
+    background-color: #eee;
+    padding: 1em;
+    margin: 1em 0;
+}
+#message{
+    max-height: 6em;
+}
