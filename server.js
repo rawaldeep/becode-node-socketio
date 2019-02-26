@@ -27,6 +27,11 @@ app.get('/', (req, res)=>{
         socket.on('send message', (data)=>{
             io.sockets.emit('new message', {msg: data, user: socket.username});
         })
+        //typing
+        socket.on('typing', (data)=>{
+            sockets.broadcast.emit('typing', {user: socket.username});
+        })
+        
         //new user
         socket.on('new user', (data, callback)=>{
             callback(true);

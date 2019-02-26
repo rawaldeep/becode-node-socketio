@@ -8,6 +8,7 @@ $(function(){
     let userFormArea = $('#userFormArea');
     let users = $('#users');
     let username = $('#username');
+    let type = $('#typing');
 
 
     $(message).keyup(function (e) {
@@ -28,13 +29,13 @@ $(function(){
         event.preventDefault();
         socket.emit('send message', message.val());
         message.val('');
-    })
+    });
+    
     socket.on('new message', (data)=>{
         chat.append(`<div class="well"><strong>${data.user}</strong> ${data.msg}</div>`)
             $(chat).animate({scrollTop: $(chat).prop("scrollHeight")}, 500);
-    })
+    });
     userForm.submit( function(event){
-        console.log(username.val());
         event.preventDefault();
         if(username.val()){
         socket.emit('new user', username.val(), (data)=>{
@@ -66,6 +67,32 @@ $(function(){
             html += `<li class="list-group-item">${data[i]}</li>`;
         }
         users.html(html);
-    })
+    });
+    let typing = false;
+    let timeout = undefined;
+    function timeoutFunction(){
+        typing = false;
+        type.html(``)
+      }
+        
+      $(message).keyup(function (e) {
+            socket.on('typing', (data)=>{
+            if (e.which === 13 ) {
+                if (!event.shiftKey) {
+                type.html( ``);
+                clearTimeout(timeout);
+                timeout = setTimeout(timeoutFunction, 3000);
+                }}else{
+                    typing = true;
+                    timeout = setTimeout(timeoutFunction, 3000);
+                    if(data.user === undefined){
+                        type.html(`random user is typing`)
+                    }else{
+                    type.html(`${data.user} is typing`)
+                    }
+                }
+            
+            })
+        });
     
 })
